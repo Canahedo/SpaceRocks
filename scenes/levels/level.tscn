@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://bt11xdi564sly"]
+
+[ext_resource type="PackedScene" uid="uid://c84ddbrwahe1c" path="res://scenes/player/player.tscn" id="1_l3m37"]
+[ext_resource type="Texture2D" uid="uid://tqsu3frota2n" path="res://graphics/ground/stones.png" id="1_rm560"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hstkb"]
+size = Vector2(1, 1280)
+
+[node name="Level" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(361.5, 641)
+scale = Vector2(0.373437, 0.998438)
+texture = ExtResource("1_rm560")
+
+[node name="Player" parent="." instance=ExtResource("1_l3m37")]
+position = Vector2(358, 1041)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(0, -500)
+rotation = 1.5708
+zoom = Vector2(0.75, 0.75)
+limit_left = -1000
+limit_right = 1720
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 1.5
+
+[node name="Walls" type="StaticBody2D" parent="."]
+position = Vector2(-750, 0)
+
+[node name="Left Wall" type="CollisionShape2D" parent="Walls"]
+position = Vector2(0, 640)
+shape = SubResource("RectangleShape2D_hstkb")
+
+[node name="Right Wall" type="CollisionShape2D" parent="Walls"]
+position = Vector2(2220, 640)
+shape = SubResource("RectangleShape2D_hstkb")

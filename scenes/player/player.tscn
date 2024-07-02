@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://c84ddbrwahe1c"]
+
+[ext_resource type="Texture2D" uid="uid://c1yl5jh41i56g" path="res://graphics/player/player.png" id="1_45fhr"]
+
+[sub_resource type="GDScript" id="GDScript_of3kd"]
+script/source = "extends CharacterBody2D
+
+@export var max_speed: int = 500
+var speed: int = max_speed
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta):
+	
+	# input 
+	var direction = Input.get_vector(\"left\", \"right\", \"none\", \"none\")
+	velocity = direction * speed
+	move_and_slide()
+
+	# laser shooting input
+	if Input.is_action_pressed(\"primary fire\"):
+		pass
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wxva8"]
+radius = 70.0
+
+[node name="Player" type="CharacterBody2D"]
+script = SubResource("GDScript_of3kd")
+
+[node name="PlayerImage" type="Sprite2D" parent="."]
+position = Vector2(3, -39)
+texture = ExtResource("1_45fhr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wxva8")
