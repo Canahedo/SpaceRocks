@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://exe4uuk3pfw8"]
+
+[ext_resource type="Script" path="res://bullet/bullet.gd" id="1_wyca8"]
+[ext_resource type="Texture2D" uid="uid://6r510w50qef0" path="res://assets/asteroids.png" id="2_qmqm6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ht658"]
+atlas = ExtResource("2_qmqm6")
+region = Rect2(0, 512, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jttc6"]
+atlas = ExtResource("2_qmqm6")
+region = Rect2(16, 512, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bi5hy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ht658")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jttc6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l00i5"]
+radius = 3.0
+
+[node name="Bullet" type="Area2D"]
+script = ExtResource("1_wyca8")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_bi5hy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_l00i5")
+
+[node name="Lifespan" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="timeout" from="Lifespan" to="." method="_on_lifespan_timeout"]

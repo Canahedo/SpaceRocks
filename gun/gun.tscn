@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd8xfpayg4dam"]
+
+[ext_resource type="Script" path="res://gun/gun.gd" id="1_hske2"]
+
+[node name="Gun" type="Node2D"]
+script = ExtResource("1_hske2")
+
+[node name="Reload" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="Cooldown" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Reload" to="." method="_on_reload_timeout"]
+[connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]

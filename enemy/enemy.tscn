@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://x0stcdo8jrkr"]
+
+[ext_resource type="Texture2D" uid="uid://6r510w50qef0" path="res://assets/asteroids.png" id="1_g3yk2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6yeui"]
+radius = 20.0
+height = 68.0
+
+[node name="Enemy" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_g3yk2")
+region_enabled = true
+region_rect = Rect2(18.3298, 412.704, 88.8144, 65.354)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_6yeui")
+metadata/_edit_lock_ = true
