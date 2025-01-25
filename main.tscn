@@ -9,3 +9,5 @@ script = ExtResource("1_vesym")
 [node name="Player" parent="." instance=ExtResource("1_kys2o")]
 position = Vector2(960, 540)
 rotation = -1.5708
+
+[connection signal="PAUSE" from="." to="." method="_on_pause"]

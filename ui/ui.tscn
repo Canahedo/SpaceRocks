@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://2qa7nlw51tan"]
+
+[ext_resource type="Script" path="res://ui/ui.gd" id="1_pl5a1"]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_pl5a1")

@@ -11,11 +11,12 @@ extends Area2D
 # Variables
 var size: int
 var direction: Vector2
+var shooter
 
 
 # Configuration
 const SPEED: float = 700.0
-const LIFESPAN: float = 2.0
+const LIFESPAN: float = 1.5
 
 
 func _ready() -> void:
@@ -38,3 +39,8 @@ func destroy() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	area.destroy()
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if body != shooter:
+		destroy()

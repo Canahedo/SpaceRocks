@@ -1,5 +1,8 @@
 extends Node2D
 
+signal PAUSE
+
+
 # Node References
 @onready var rock_scene: PackedScene = preload("res://rock/rock.tscn")
 @onready var screen_size: Vector2 = get_viewport_rect().size
@@ -7,6 +10,7 @@ extends Node2D
 
 # Variables
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var paused: bool = false
 
 
 # Configuration
@@ -45,3 +49,11 @@ func spawn_rock() -> void:
 			rock.position.y = rng.randi_range(0, 1080)
 	rock.initial_direction()
 	add_child(rock)
+
+
+func _on_pause() -> void:
+	if not paused:
+		print("Pause")
+	else:
+		print("Unpause")
+	pass

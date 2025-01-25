@@ -5,6 +5,8 @@ extends CharacterBody2D
 # Node References
 @onready var gun: Gun = $Gun
 @onready var hyperdrive_timer: Timer = $HyperdriveCooldown
+@onready var animation: AnimatedSprite2D = $AnimatedSprite2D
+@onready var main = self.get_parent()
 
 
 class PlayerActions:
@@ -31,9 +33,14 @@ func _physics_process(delta: float) -> void:
 	player_movement(delta, player_input)
 	if player_input.is_firing:
 		gun.fire(self.transform.x, player_input.is_holding_fire)
+	player_animation(player_input.is_accelerating)
 
 
 func get_input(delta: float) -> PlayerActions:
+
+	if Input.is_action_pressed(""):
+		main.PAUSE.emit()
+
 	var input: PlayerActions = PlayerActions.new()
 	input.turn_direction = Input.get_axis("left", "right")
 	input.is_accelerating = Input.is_action_pressed("up")
@@ -68,6 +75,13 @@ func player_movement(delta: float, actions: PlayerActions) -> void:
 		self.velocity = Vector2.ZERO
 
 	var _collided: bool = move_and_slide()
+
+
+func player_animation(is_accelerating) -> void:
+	if is_accelerating:
+		animation.play("forward")
+	else:
+		animation.play("default")
 
 
 func _on_hyperdrive_cooldown_timeout() -> void:

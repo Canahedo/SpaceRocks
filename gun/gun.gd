@@ -33,6 +33,7 @@ func fire(direction: Vector2, holding_fire: bool = false) -> void:
 	bullet.size = bullet_size
 	bullet.global_position = self.global_position
 	bullet.direction = direction
+	bullet.shooter = shooter
 	shooter.add_sibling(bullet)
 
 	# Cooldown and reload
