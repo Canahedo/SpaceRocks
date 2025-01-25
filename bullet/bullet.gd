@@ -9,7 +9,7 @@ extends Area2D
 
 
 # Variables
-var size: int
+var size: int # Should be either 0 or 1
 var direction: Vector2
 var shooter
 
@@ -33,14 +33,15 @@ func _on_lifespan_timeout() -> void:
 	queue_free()
 
 
-func destroy() -> void:
-	queue_free()
-
-
 func _on_area_entered(area: Area2D) -> void:
-	area.destroy()
+	if area is Bullet:
+		queue_free()
+	if area.has_method("destroy"):
+		area.destroy()
+		queue_free()
 
 
 func _on_body_entered(body: Node2D) -> void:
 	if body != shooter:
-		destroy()
+		body.destroy()
+		queue_free()

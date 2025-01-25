@@ -1,10 +1,40 @@
-[gd_scene load_steps=2 format=3 uid="uid://2qa7nlw51tan"]
+[gd_scene load_steps=4 format=3 uid="uid://2qa7nlw51tan"]
 
 [ext_resource type="Script" path="res://ui/ui.gd" id="1_pl5a1"]
+[ext_resource type="Texture2D" uid="uid://cya46xpx25f2i" path="res://assets/ship.png" id="2_leqlk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oht0o"]
+font_size = 40
 
 [node name="UI" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 script = ExtResource("1_pl5a1")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+
+[node name="ScoreLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 215.0
+offset_bottom = 70.0
+text = "0
+"
+label_settings = SubResource("LabelSettings_oht0o")
+
+[node name="LivesContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 75.0
+offset_right = 169.0
+offset_bottom = 117.0
+
+[node name="ExtraLife" type="TextureRect" parent="LivesContainer"]
+layout_mode = 2
+texture = ExtResource("2_leqlk")

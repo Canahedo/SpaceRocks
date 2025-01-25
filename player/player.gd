@@ -11,10 +11,9 @@ extends CharacterBody2D
 
 class PlayerActions:
 	var turn_direction: float
-	var is_accelerating: bool
-	var is_firing: bool
-	var is_holding_fire: bool
-	var is_hyperdrive: bool
+	var is_accelerating: bool = false
+	var is_firing: bool = false
+	var is_hyperdrive: bool = false
 
 
 # Configurations
@@ -22,38 +21,27 @@ var rotation_speed: float = 5.0
 var accel: float = 1000.0
 var friction: float = 100.0
 var max_speed: float = 350.0
-var hold_fire_counter: float = 0.0
-var hold_time: float = 2.0
 var can_hyperdrive: bool = true
 var hyperdrive_cooldown: float = 5.0
 
 
 func _physics_process(delta: float) -> void:
-	var player_input: PlayerActions = get_input(delta)
+	if Engine.time_scale == 0:
+		return
+	var player_input: PlayerActions = get_input()
 	player_movement(delta, player_input)
-	if player_input.is_firing:
-		gun.fire(self.transform.x, player_input.is_holding_fire)
 	player_animation(player_input.is_accelerating)
+	if player_input.is_firing:
+		gun.fire(self.transform.x)
 
 
-func get_input(delta: float) -> PlayerActions:
-
-	if Input.is_action_pressed(""):
-		main.PAUSE.emit()
-
+func get_input() -> PlayerActions:
 	var input: PlayerActions = PlayerActions.new()
 	input.turn_direction = Input.get_axis("left", "right")
 	input.is_accelerating = Input.is_action_pressed("up")
 	input.is_hyperdrive = Input.is_action_pressed("secondary fire")
-
-	if hold_fire_counter >= hold_time:
-		input.is_holding_fire = true
 	if Input.is_action_pressed("primary fire"):
 		input.is_firing = true
-		hold_fire_counter += delta
-	else:
-		hold_fire_counter = 0.0
-
 	return input
 
 
@@ -89,4 +77,5 @@ func _on_hyperdrive_cooldown_timeout() -> void:
 
 
 func destroy() -> void:
+	Globals.PLAYER_KILLED.emit()
 	queue_free()
