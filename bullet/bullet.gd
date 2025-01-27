@@ -11,7 +11,7 @@ extends Area2D
 # Variables
 var size: int # Should be either 0 or 1
 var direction: Vector2
-var shooter
+var shooter_is_player: bool
 
 
 # Configuration
@@ -42,6 +42,6 @@ func _on_area_entered(area: Area2D) -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if body != shooter:
+	if not shooter_is_player:
 		body.destroy()
 		queue_free()

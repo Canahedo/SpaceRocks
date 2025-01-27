@@ -1,12 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://x0stcdo8jrkr"]
+[gd_scene load_steps=5 format=3 uid="uid://x0stcdo8jrkr"]
 
 [ext_resource type="Texture2D" uid="uid://6r510w50qef0" path="res://assets/asteroids.png" id="1_g3yk2"]
+[ext_resource type="Script" path="res://enemy/enemy.gd" id="1_tewou"]
+[ext_resource type="PackedScene" uid="uid://bd8xfpayg4dam" path="res://gun/gun.tscn" id="3_lklkq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6yeui"]
 radius = 20.0
 height = 68.0
 
-[node name="Enemy" type="Area2D"]
+[node name="Enemy" type="Area2D" groups=["enemy", "target"]]
+script = ExtResource("1_tewou")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_g3yk2")
@@ -18,3 +21,8 @@ metadata/_edit_lock_ = true
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_6yeui")
 metadata/_edit_lock_ = true
+
+[node name="Gun" parent="." instance=ExtResource("3_lklkq")]
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -19,12 +19,4 @@ color = Color(0, 0, 0, 1)
 [node name="Respawn" type="Timer" parent="."]
 one_shot = true
 
-[node name="LevelUp" type="Timer" parent="."]
-wait_time = 1.5
-one_shot = true
-
-[node name="EnemyDelay" type="Timer" parent="."]
-
 [connection signal="timeout" from="Respawn" to="." method="_on_respawn_timeout"]
-[connection signal="timeout" from="LevelUp" to="." method="_on_level_up_timeout"]
-[connection signal="timeout" from="EnemyDelay" to="." method="_on_enemy_delay_timeout"]

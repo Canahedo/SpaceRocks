@@ -6,42 +6,52 @@ extends CharacterBody2D
 @onready var gun: Gun = $Gun
 @onready var hyperdrive_timer: Timer = $HyperdriveCooldown
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
-@onready var main = self.get_parent()
 
 
 class PlayerActions:
 	var turn_direction: float
 	var is_accelerating: bool = false
-	var is_firing: bool = false
+	var fire_type: String = "none"
 	var is_hyperdrive: bool = false
 
 
 # Configurations
-var rotation_speed: float = 5.0
-var accel: float = 1000.0
+var rotation_speed: float = 4.0
+var accel: float = 500.0
 var friction: float = 100.0
 var max_speed: float = 350.0
 var can_hyperdrive: bool = true
 var hyperdrive_cooldown: float = 5.0
 
+var hold_counter: float
+var hold_threshold: float = .5
+
 
 func _physics_process(delta: float) -> void:
 	if Engine.time_scale == 0:
 		return
-	var player_input: PlayerActions = get_input()
+	var player_input: PlayerActions = get_input(delta)
 	player_movement(delta, player_input)
 	player_animation(player_input.is_accelerating)
-	if player_input.is_firing:
-		gun.fire(self.transform.x)
+	if player_input.fire_type != "none":
+		gun.fire_type(self.transform.x, (player_input.fire_type == "burst"))
 
 
-func get_input() -> PlayerActions:
+func get_input(delta) -> PlayerActions:
 	var input: PlayerActions = PlayerActions.new()
 	input.turn_direction = Input.get_axis("left", "right")
 	input.is_accelerating = Input.is_action_pressed("up")
 	input.is_hyperdrive = Input.is_action_pressed("secondary fire")
+
 	if Input.is_action_pressed("primary fire"):
-		input.is_firing = true
+		if Input.is_action_just_pressed("primary fire"):
+			input.fire_type = "single"
+			hold_counter = 0.0
+		elif hold_counter >= hold_threshold:
+			input.fire_type = "burst"
+		else:
+			hold_counter += delta
+			input.fire_type = "none"
 	return input
 
 

@@ -34,6 +34,11 @@ window/stretch/mode="viewport"
 
 project/assembly_name="SpaceRocks"
 
+[global_group]
+
+target=""
+enemy=""
+
 [input]
 
 left={
