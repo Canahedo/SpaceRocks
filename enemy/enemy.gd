@@ -2,6 +2,7 @@ class_name Enemy
 extends Area2D
 
 enum {LARGE, SMALL}
+enum EnemyState {PATROL, HUNT, EVADE}
 
 const SPEED: int = 200
 
@@ -11,6 +12,7 @@ var direction: Vector2
 
 # Private
 var points: int
+var state: EnemyState = EnemyState.PATROL
 
 @onready var gun: Gun = $Gun
 
@@ -29,6 +31,7 @@ func _physics_process(delta: float) -> void:
 	global_position += SPEED * direction * delta
 	if position.x < -50.0 or position.x > 1970:
 		queue_free()
+
 
 
 func _destroy() -> void:

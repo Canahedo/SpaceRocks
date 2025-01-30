@@ -15,12 +15,13 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $CollisionShape2D
+@onready var shape_cast: ShapeCast2D = $ShapeCast2D
 @onready var rock_scene: PackedScene = preload("res://rock/rock.tscn")
 
 
 func _ready() -> void:
 	sprite.frame = rng.randi_range(0,2)
-	set_rotation_degrees(rng.randi_range(-360,360))
+	shape_cast.rotation = direction.angle()
 	match size:
 		LARGE:
 			self.scale = Vector2(1, 1)

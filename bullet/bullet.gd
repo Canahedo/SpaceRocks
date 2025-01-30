@@ -28,7 +28,7 @@ func _on_lifespan_timeout() -> void:
 	queue_free()
 
 
-func _on_area_entered(area: Area2D) -> void:
+func _on_area_entered() -> void:
 	queue_free()
 
 
