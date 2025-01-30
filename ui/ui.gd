@@ -1,23 +1,19 @@
 class_name UI
 extends CanvasLayer
 
+# Public
+var score: int = 0
 
+# Private
+var paused: bool = false
+var extra_life: int = 10_000
+
+@onready var main = get_parent()
 @onready var score_label: Label = $UI/ScoreLabel
 @onready var lives_container: HBoxContainer = $UI/LivesContainer
-@onready var main = get_parent()
 @onready var start_menu: VBoxContainer = $UI/StartMenu
 @onready var pause_menu: VBoxContainer = $UI/PauseMenu
 @onready var end_menu: VBoxContainer = $UI/EndMenu
-
-
-var score: int = 0
-var paused: bool = false
-var end_text: String
-var extra_life: int = 10_000
-
-
-func _ready() -> void:
-	pass
 
 
 func attract() -> void:
@@ -47,6 +43,7 @@ func life_gain() -> void:
 	main.lives_remaining += 1
 	var extra_ship = lives_container.get_child(0).duplicate()
 	lives_container.add_child(extra_ship)
+
 
 func game_over() -> void:
 	end_menu.visible = true

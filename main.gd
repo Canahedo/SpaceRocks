@@ -2,30 +2,25 @@ extends Node2D
 
 enum {ATTRACT, PLAY, END}
 
+const INITIAL_ENEMY_DELAY: float = 35.0
+const LATER_ENEMY_DELAY: float = 10.0
+const RESPAWN_DELAY: float = 1.5
 
-# Node References
+# Private
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var game_state: int = ATTRACT
+var lives_remaining: int = 3
+var rocks_to_spawn: int = 4
+
 @onready var rock_scene: PackedScene = preload("res://rock/rock.tscn")
-@onready var screen_size: Vector2 = get_viewport_rect().size
+@onready var player_scene: PackedScene = preload("res://player/player.tscn")
+@onready var enemy_scene: PackedScene = preload("res://enemy/enemy.tscn")
 @onready var ui: UI = $UI
 @onready var game_objects: Node2D = $GameObjects
-@onready var player_scene = preload("res://player/player.tscn")
 @onready var respawn_timer: Timer = $Respawn
 @onready var level_up_timer: Timer = $LevelUp
 @onready var enemy_delay_timer: Timer = $EnemyDelay
-@onready var enemy_scene: PackedScene = preload("res://enemy/enemy.tscn")
-
-
-# Variables
-var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-var game_state = ATTRACT
-var player: Player
-
-# Configuration
-var lives_remaining: int = 3
-var rocks_to_spawn: int = 4
-var respawn_length: float = 1.5
-var intial_enemy_delay: float = 35.0
-var later_enemy_delay = 10.0
+@onready var screen_size: Vector2 = get_viewport_rect().size
 
 
 func _ready() -> void:
@@ -52,7 +47,7 @@ func setup_game() -> void:
 
 
 func spawn_player() -> void:
-	player = player_scene.instantiate()
+	var player: Player = player_scene.instantiate()
 	player.position = Vector2(960, 540)
 	player.rotation_degrees = -90
 	game_objects.add_child(player)
@@ -73,17 +68,16 @@ func _physics_process(_delta: float) -> void:
 
 
 func pick_enemy_respawn(new_level: bool = false) -> float:
-	var offset: float
 	if new_level:
-		offset = rng.randf_range(-later_enemy_delay, later_enemy_delay)
-		return intial_enemy_delay + offset
+		var enemy_spawn_variance: float = rng.randf_range(-LATER_ENEMY_DELAY, LATER_ENEMY_DELAY)
+		return INITIAL_ENEMY_DELAY + enemy_spawn_variance
 	else:
-		return rng.randf_range((later_enemy_delay), later_enemy_delay * 2)
+		return rng.randf_range((LATER_ENEMY_DELAY), LATER_ENEMY_DELAY * 2)
+
 
 func pick_enemy_size():
-	@warning_ignore("integer_division")
-	var score_range : int = clampi(ui.score / 1000, 0, 4)
-	var threshold: int = (score_range + 1) * 20
+	var score_tier : float = clampf(ui.score / 1000.0, 0, 4)
+	var threshold: float = (score_tier + 1) * 20
 	if rng.randi_range(1, 100) > threshold:
 		return 0
 	else:
@@ -142,7 +136,7 @@ func _on_player_killed():
 		game_state = END
 	else:
 		ui.life_lost()
-		respawn_timer.start(respawn_length)
+		respawn_timer.start(RESPAWN_DELAY)
 
 
 func _on_target_destroyed(size) -> void:

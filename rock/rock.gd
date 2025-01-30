@@ -3,18 +3,19 @@ extends Area2D
 
 enum {LARGE = 1, MEDIUM, SMALL}
 
+const SPEED: int = 200
+const ROCK_SPLITS = 2 # How many smaller rocks spawn when a rock is destroyed
+
+# Public
+var direction: Vector2
+var size: int
+
+# Private
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $CollisionShape2D
 @onready var rock_scene: PackedScene = preload("res://rock/rock.tscn")
-
-@onready var size: int
-
-var direction: Vector2
-var speed = 200
-var rock_splits = 2 # How many smaller rocks spawn when a rock is destroyed
-
-
-var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _ready() -> void:
@@ -30,12 +31,14 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	global_position += speed * direction * delta
+	global_position += SPEED * direction * delta
 
 
 func trajectory(parent_dir: Vector2 = Vector2.ZERO) -> void:
+	# If no parent direction (new rock), random direction
 	if parent_dir == Vector2.ZERO:
 		direction = Vector2(rng.randi_range(-360, 360), rng.randi_range(-360, 360)).normalized()
+	# Chooses random vector within range of 1/2 PI either direction of parent direction
 	else:
 		var spread: float = PI / 2
 		var change = randf_range(-spread, +spread)
@@ -44,22 +47,23 @@ func trajectory(parent_dir: Vector2 = Vector2.ZERO) -> void:
 
 func destroy() -> void:
 	if size != 3:
-		for i in range(rock_splits):
+		for i in range(ROCK_SPLITS):
 			var rock: Rock = rock_scene.instantiate()
 			rock.size = self.size + 1
 			rock.trajectory(self.direction)
 			rock.global_position = self.global_position
 			call_deferred("add_sibling", rock)
-	queue_free()
+	call_deferred("queue_free")
 
 
 func _on_area_entered(area: Area2D) -> void:
 	if area is Bullet and area.shooter_is_player:
 		Globals.TARGET_DESTROYED.emit(self.size)
-	if not area is Rock and area.has_method("destroy"):
-		area.destroy()
+	if not area is Rock:
+		self.destroy()
 
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(body: CharacterBody2D) -> void:
+	Globals.TARGET_DESTROYED.emit(self.size)
 	body.destroy()
 	self.destroy()

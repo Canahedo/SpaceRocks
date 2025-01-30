@@ -1,55 +1,46 @@
 class_name Gun
 extends Node2D
 
-
 enum {SMALL, LARGE}
 
+const COOLDOWN: float = .1
+const RELOAD: float = .5
 
-# Node References
+# Public
+var bullet_size: int = SMALL
+
+# Private
+var can_fire: bool = true
+var ammo: int = 4
+
 @onready var bullet_scene: PackedScene = preload("res://bullet/bullet.tscn")
 @onready var cooldown_timer: Timer = $Cooldown
 @onready var shooter = get_parent()
-@onready var shooter_is_player: bool = shooter is Player
 
-
-
-# Variables
-var can_fire: bool = true
-var bullet_size: int = SMALL
-
-
-# Configuration
-var cooldown: float = .1
-var burst_reload: float = .5
-var burst_ammo: int = 4
-
-func fire_type(direction: Vector2, burst: bool = false) -> void:
+func fire(direction: Vector2, burst: bool = false) -> void:
 	if not can_fire:
 		return
-	shoot(direction)
+	_create_bullet(direction)
 	can_fire = false
-
+	cooldown_timer.start(COOLDOWN)
 	if burst:
-		burst_ammo -= 1
-		if burst_ammo > 0:
-			cooldown_timer.start(cooldown)
-		else:
-			cooldown_timer.start(burst_reload)
-			burst_ammo = 4
-
+		ammo -= 1
+		if ammo <= 0:
+			ammo = 4
+			cooldown_timer.start(RELOAD)
 	else:
-		cooldown_timer.start(cooldown)
-		burst_ammo = 4
+		ammo = 4
 
 
-func shoot(direction: Vector2):
+func _create_bullet(direction: Vector2):
 	# Create bullet, set specifics, and add to tree
 	var bullet: Bullet = bullet_scene.instantiate()
 	bullet.size = bullet_size
 	bullet.global_position = self.global_position
 	bullet.direction = direction
-	bullet.shooter_is_player = shooter_is_player
+	bullet.shooter_is_player = shooter is Player
 	shooter.add_sibling(bullet)
+
 
 func _on_cooldown_timeout() -> void:
 	can_fire = true
